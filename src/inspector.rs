@@ -1,4 +1,4 @@
-use revm::{interpreter::{CallInputs, CallOutcome, CreateInputs, CreateOutcome, Interpreter, InterpreterTypes}, primitives::{HashMap, Log}, Inspector};
+use revm::{context::ContextTr, interpreter::{CallInputs, CallOutcome, CreateInputs, CreateOutcome, Interpreter, InterpreterTypes}, primitives::{HashMap, Log}, Inspector};
 use serde_json::{json, Value};
 
 pub struct MyInspector<'a> {
@@ -21,7 +21,7 @@ impl<'a> MyInspector<'a> {
        }
     }
 }
-impl<'a, CTX, INTR: InterpreterTypes> Inspector<CTX, INTR> for MyInspector<'a> {
+impl<'a, CTX: ContextTr, INTR: InterpreterTypes> Inspector<CTX, INTR> for MyInspector<'a> {
     fn step(&mut self, interp: &mut Interpreter<INTR>, _context: &mut CTX) {
         self.gas_used += interp.gas.spent();
     }
@@ -91,6 +91,7 @@ impl<'a, CTX, INTR: InterpreterTypes> Inspector<CTX, INTR> for MyInspector<'a> {
         let call_info = json!({
             "inputs": inputs,
             "outcome": outcome,
+            "input_bytes":inputs.input.bytes(context),
             "calls": calls,
             "logs": self.logs_stack
         });
