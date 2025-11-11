@@ -42,6 +42,7 @@ pub fn trace_transaction(
     from_nonce: u64,
     to: Address,
     data: Bytes,
+    value: U256,
     gas_limit: u64,
     gas_price: u128,
     gas_priority_fee: u128,
@@ -64,6 +65,7 @@ pub fn trace_transaction(
         .gas_price(gas_price)
         .gas_priority_fee(Some(gas_priority_fee))
         .data(data)
+        .value(value)
         .build();
 
     let tx: TxEnv;
@@ -161,6 +163,7 @@ pub fn op_trace_transaction(
     from_nonce: u64,
     to: Address,
     data: Bytes,
+    value: U256,
     gas_limit: u64,
     gas_price: u128,
     gas_priority_fee: u128,
@@ -182,7 +185,8 @@ pub fn op_trace_transaction(
         .gas_limit(gas_limit)
         .gas_price(gas_price)
         .gas_priority_fee(Some(gas_priority_fee))
-        .data(data);
+        .data(data)
+        .value(value);
     let op_tx_build = OpTransaction::builder()
         .base(base_tx)
         .enveloped_tx(None)
